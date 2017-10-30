@@ -6,7 +6,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     MAKER_MAIL_SUBJECT_PREFIX = '[CUC Fab Lab]'
-    MAKER_MAIL_SENDER = 'CUC Fab Lab Admin <flasky@example.com>'
+    MAKER_MAIL_SENDER = 'CUC Fab Lab Admin <crappyoats@gmail.com>'
     MAKER_ADMIN = os.environ.get('FABLAB_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

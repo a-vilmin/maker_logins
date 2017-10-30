@@ -22,8 +22,15 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    flash_message = ''
+    if not current_user.in_lab:
+        current_user.in_lab = True
+        flash_message = "You're all set! Start Making!"
+    else:
+        current_user.in_lab = False
+        flash_message = "You're signed out. Thanks for visiting!"
     logout_user()
-    flash('You have been logged out.')
+    flash(flash_message)
     return redirect(url_for('main.index'))
 
 
