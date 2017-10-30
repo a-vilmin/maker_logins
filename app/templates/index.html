@@ -1,1 +1,25 @@
-<h1> Come back later </h1>
+{% extends "base.html" %}
+
+
+{% block page_content %}
+<div class="jumbotron">
+    <div class="container">
+	<div class="row">
+	    <div class="col-lg center-block">
+		<center>
+		<img src="{{ url_for('static', filename='img/logo.png') }}"/>
+		<h1>Maker Login</h1>
+		<p>The Fab Lab is a research facility,
+		    so we need your help to track how people make!</p>
+		<p>
+		    <a href="{{ url_for('auth.login')}}"
+		       class="btn btn-primary btn-lg">Log In</a>
+		    <a href="{{ url_for('auth.register')}}"
+		       class="btn btn-primary btn-lg">Sign Up</a>
+		</p>
+		</center>
+	    </div>
+	</div>
+    </div>
+</div>
+{% endblock %}

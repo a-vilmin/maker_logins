@@ -1,5 +1,20 @@
+{% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-<div class="col-md-4">
-    {{ wtf.quick_form(form) }}
+
+{% block page_content %}
+<div class="container">
+    <div class="row"><br><br><br></div>
+    <div class="row">
+	<div class="col-lg-4">
+	    <img src="{{ url_for('static', filename='img/logo.png') }}"/>
+	</div>
+	<div class="col-lg-6">
+	    <div>
+		<br><br>
+	    {{ wtf.quick_form(form) }}
+	    </div>
+	</div>
+    </div>
 </div>
+{% endblock %}
