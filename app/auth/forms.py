@@ -9,7 +9,8 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 64),
                                              Email()])
     password = PasswordField('Password', validators=[Required()])
-    terms_of_service = BooleanField('I understand I have to pay charges')
+    terms_of_service = BooleanField('I understand I have to pay charges',
+                                    validators=[Required()])
     submit = SubmitField('Log In')
 
 

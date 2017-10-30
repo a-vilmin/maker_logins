@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<div class="container">
+    <div class="row"><br><br><br></div>
+    <div class="row">
+	<div class="col-lg-4">
+	    <img src="{{ url_for('static', filename='img/logo.png') }}"/>
+	</div>
+	<div class="col-lg-6">
+	    <div>
+		<br><br>
+		{{ wtf.quick_form(form) }}
+	    </div>
+	</div>
+	<div class="col-lg-2">
+	    <br><br>
+	    <a href="{{ url_for('auth.logout') }}"
+	       class="btn btn-success btn-lg">
+		{% if user.in_lab %}Logout{% else %}Start Making{% endif %} 
+	    </a>
+	</div>
+    </div>
+</div>
+{% endblock %}

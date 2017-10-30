@@ -14,7 +14,9 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or
+                            url_for('main.user', username=user.username))
+        # TODO FLASH MESSAGE FOR NO CLICK ON PAY BUTTON
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
@@ -23,11 +25,15 @@ def login():
 @login_required
 def logout():
     flash_message = ''
-    if not current_user.in_lab:
-        current_user.in_lab = True
+    user = current_user._get_current_object()
+    if not user.in_lab:
+        user.in_lab = True
+        db.session.commit()
         flash_message = "You're all set! Start Making!"
     else:
-        current_user.in_lab = False
+        user.in_lab = False
+        # TODO put leave time in to current visit
+        db.session.commit()
         flash_message = "You're signed out. Thanks for visiting!"
     logout_user()
     flash(flash_message)
