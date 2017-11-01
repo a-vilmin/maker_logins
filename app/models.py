@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     email = db.Column(db.String(64), unique=True, index=True)
     in_lab = db.Column(db.Boolean, default=False)
-    visits = db.relationship("Visit", backref='visit')
+    visits = db.relationship("Visit", backref='users')
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
 

@@ -1,9 +1,10 @@
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
+from datetime import datetime
 from . import auth
 from .. import db
 from ..email import send_email
-from ..models import User
+from ..models import User, Visit
 from .forms import LoginForm, RegistrationForm
 
 
@@ -32,7 +33,9 @@ def logout():
         flash_message = "You're all set! Start Making!"
     else:
         user.in_lab = False
-        # TODO put leave time in to current visit
+        # put leave time in to current visit
+        visit = Visit.query.filter_by(visit_user=user.id)[-1]
+        visit.out_time = datetime.now()
         db.session.commit()
         flash_message = "You're signed out. Thanks for visiting!"
     logout_user()

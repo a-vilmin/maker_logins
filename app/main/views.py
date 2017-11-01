@@ -1,4 +1,4 @@
-from flask import current_app, render_template, redirect, url_for, request
+from flask import current_app, render_template, redirect, url_for, request, abort
 from flask_login import current_user
 from datetime import datetime
 from . import main
@@ -17,13 +17,16 @@ def index():
 def user(username):
     form = VisitForm()
     user = current_user._get_current_object()
+
+    if user.username != username:
+        abort(500)
     if form.validate_on_submit():
         visit = Visit(purpose=form.purpose.data,
-                      visit_user=user,
+                      visit_user=user.id,
                       in_time=datetime.now())
         db.session.add(visit)
         db.session.commit()
-        return redirect(url_for('/user/'+username))
+        return redirect(url_for('main.user', username=username))
     return render_template('user.html', user=user, form=form)
 
 
