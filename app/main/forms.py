@@ -4,6 +4,6 @@ from wtforms.validators import Required
 
 
 class VisitForm(FlaskForm):
-    purpose = TextAreaField("What are you visiting to do?",
+    purpose = TextAreaField("What is your project for today?",
                             validators=[Required()])
-    submir = SubmitField('Submit')
+    submit = SubmitField('Submit')

@@ -34,5 +34,5 @@ def user(username):
 def before_request():
     if not current_user.is_authenticated \
             and request.endpoint != 'static' \
-            and 'user' in request.endpoint:
+            and request.endpoint != 'main.index':
         return redirect(url_for('main.index'))
