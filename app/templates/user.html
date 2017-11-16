@@ -13,10 +13,12 @@
 	    </a>
 	</div>
 	<div class="col-lg-6">
-	    <div>
-		<br><br>
-		{{ wtf.quick_form(form) }}
-	    </div>
+	    {% if user.in_lab %}
+	    <br><br>
+	    <h1>Hope {{ user.visits[-1].purpose }} went great!</h1>
+	    {% else %}
+	    <h1> Stub for reminding me to put active open hours people </h1>
+	    {% endif %}
 	</div>
     </div>
 </div>

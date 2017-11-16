@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     visits = db.relationship("Visit", backref='users')
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
+    user_type = db.Column(db.String(12))
 
     @property
     def password(self):
@@ -58,6 +59,7 @@ class Visit(db.Model):
     in_time = db.Column(db.DateTime, unique=True)
     out_time = db.Column(db.DateTime, unique=True)
     purpose = db.Column(db.Text)
+    type_visit = db.Column(db.String(12))
     visit_user = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):

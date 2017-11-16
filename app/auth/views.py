@@ -15,8 +15,15 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
-            return redirect(request.args.get('next') or
-                            url_for('main.user', username=user.username))
+
+            if not user.in_lab:
+                return redirect(request.args.get('next') or
+                                url_for('main.log_visit',
+                                        username=user.username))
+            else:
+                return redirect(request.args.get('next') or
+                                url_for('main.user',
+                                        username=user.username))
         # TODO FLASH MESSAGE FOR NO CLICK ON PAY BUTTON
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
@@ -49,7 +56,8 @@ def register():
     if form.validate_on_submit():
         new_user = User(email=form.email.data,
                         username=form.username.data,
-                        password=form.password.data)
+                        password=form.password.data,
+                        user_type=form.user_type.data)
         db.session.add(new_user)
         db.session.commit()
         token = new_user.generate_confirmation_token()

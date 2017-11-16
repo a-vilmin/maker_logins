@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
+    RadioField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from ..models import User
@@ -28,6 +29,10 @@ class RegistrationForm(FlaskForm):
 
     password2 = PasswordField('Confirm password', validators=[Required()])
 
+    user_type = RadioField("Are you a ?",
+                           choices=[('community', 'Community Member'),
+                                    ('student', 'UIUC Student')],
+                           validators=[Required()])
     submit = SubmitField('Register')
 
     def validate_email(self, field):
