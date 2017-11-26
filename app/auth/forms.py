@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
     RadioField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo, \
+    DataRequired
 from wtforms import ValidationError
 from ..models import User
 
@@ -13,7 +14,7 @@ class LoginForm(FlaskForm):
     terms_of_service = BooleanField('<a href="http://cucfablab.org/about/' +
                                     'waiver-of-liability-assumption-of-risk' +
                                     '-and-indemnity-agreement/">' +
-                                    'I understand I have to pay charges',
+                                    'I understand I have to pay charges</a>',
                                     validators=[Required()])
     submit = SubmitField('Log In')
 
@@ -46,3 +47,25 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in use.')
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old password', validators=[DataRequired()])
+    password = PasswordField('New password', validators=[
+        DataRequired(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm new password',
+                              validators=[DataRequired()])
+    submit = SubmitField('Update Password')
+
+
+class PasswordResetRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64),
+                                             Email()])
+    submit = SubmitField('Reset Password')
+
+
+class PasswordResetForm(FlaskForm):
+    password = PasswordField('New Password', validators=[
+        DataRequired(), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm password', validators=[DataRequired()])
+    submit = SubmitField('Reset Password')

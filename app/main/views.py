@@ -4,14 +4,17 @@ from flask_login import current_user, login_required
 from datetime import datetime
 from . import main
 from .forms import VisitForm
-from ..models import Visit
+from ..models import Visit, User
 from .. import db
 
 
 @main.route('/', methods=['GET', 'POST'])
 @main.route('/index')
 def index():
-    return render_template('index.html')
+    all_users = User.query.filter_by(in_lab=True)
+    if not all_users:
+        print("thats the problem")
+    return render_template('index.html', users=all_users)
 
 
 @main.route('/user/<username>', methods=['GET', 'POST'])
