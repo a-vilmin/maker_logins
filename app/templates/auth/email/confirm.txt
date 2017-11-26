@@ -6,6 +6,8 @@ To confirm your account please click on the following link:
 
 {{ url_for('auth.confirm', token=token, _external=True) }}
 
+NOTE: You must be on the FabLab2 WiFi network to access this link!
+
 Sincerely,
 
 The Fab Lab Team

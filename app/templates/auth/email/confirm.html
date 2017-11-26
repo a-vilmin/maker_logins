@@ -1,6 +1,7 @@
 <p>Dear {{ user.username }},</p>
 <p>Welcome to the <b>CUC Fab Lab</b>!</p>
 <p>To confirm your account please <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">click here</a>.</p>
+<p>NOTE: You must access this link while connected to the FabLab2 WiFi network</p>
 <p>Alternatively, you can paste the following link in your browser's address bar:</p>
 <p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
 <p>Sincerely,</p>

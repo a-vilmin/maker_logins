@@ -10,7 +10,10 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 64),
                                              Email()])
     password = PasswordField('Password', validators=[Required()])
-    terms_of_service = BooleanField('I understand I have to pay charges',
+    terms_of_service = BooleanField('<a href="http://cucfablab.org/about/' +
+                                    'waiver-of-liability-assumption-of-risk' +
+                                    '-and-indemnity-agreement/">' +
+                                    'I understand I have to pay charges',
                                     validators=[Required()])
     submit = SubmitField('Log In')
 
@@ -31,7 +34,8 @@ class RegistrationForm(FlaskForm):
 
     user_type = RadioField("Are you a ?",
                            choices=[('community', 'Community Member'),
-                                    ('student', 'UIUC Student')],
+                                    ('student', 'UIUC Student'),
+                                    ('faculty', 'UIUC Faculty/Staff')],
                            validators=[Required()])
     submit = SubmitField('Register')
 
