@@ -2,6 +2,7 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
+{% if user.user_type != 'staff' %}
 <div class="container">
     <div class="row"><br><br><br></div>
     <div class="row">
@@ -14,12 +15,50 @@
 	</div>
 	<div class="col-lg-6">
 	    {% if user.in_lab %}
-	    <br><br>
-	    <h1>Hope {{ user.visits[-1].purpose }} went great!</h1>
+	       <br><br>
+	       <h1>Hope {{ user.visits[-1].purpose }} went great!</h1>
 	    {% else %}
 	    <h1> Stub for reminding me to put active open hours people </h1>
 	    {% endif %}
 	</div>
     </div>
 </div>
+
+{% else %}
+<div class="container">
+    <div class="row"><br><br><br></div>
+    <div class="row">
+	<div class="col-lg-4">
+	    <img src="{{ url_for('static', filename='img/logo.png') }}"/>
+	    <a href="{{ url_for('auth.logout') }}"
+	       class="btn btn-success btn-lg pull-right">
+		{% if user.in_lab %}Logout
+
+		{% else %}Start Working{% endif %}
+	    </a>
+	</div>
+	<div class="col-lg-6">
+	    <table class="table table-striped">
+		<thread>
+		    <tr>
+			<th>Users in lab</t>
+		    </tr>
+		</thread>
+		<tbody>
+		    {% for u in all_users %}
+		    <tr>
+			<td>{{ u.username }}</td>
+			<td><a href="{{ url_for('main.admin_logout', 
+				     username=u.username) }}"
+			       class="btn btn-danger btn-sm pull-right">
+			    Logout
+			</a></td>
+		    </tr>
+		    {% endfor %}
+		</tbody>
+	    </table>
+	</div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
