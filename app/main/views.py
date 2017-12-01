@@ -21,8 +21,12 @@ def index():
 @login_required
 def user(username):
     user = current_user._get_current_object()
-    all_users = User.query.filter(db.and_(User.in_lab == 1,
-                                          User.user_type != 'staff'))
+    if user.user_type != 'staff':
+    	all_users = User.query.filter(db.and_(User.in_lab == 1,
+        	                              User.user_type == 'staff'))
+    else:
+        all_users = User.query.filter(db.and_(User.in_lab == 1,
+         	                              User.user_type != 'staff'))
     if user.username != username:
         abort(500)
     return render_template('user.html', user=user, all_users=all_users)
@@ -47,7 +51,8 @@ def log_visit(username):
         db.session.add(visit)
         db.session.commit()
         return redirect(url_for('main.user', username=username))
-    return render_template('log_visit.html', user=user, all_users=all_users)
+    return render_template('log_visit.html', user=user, all_users=all_users, 
+                            form=form)
 
 
 @main.route('/user/<username>/admin_logout', methods=['GET'])

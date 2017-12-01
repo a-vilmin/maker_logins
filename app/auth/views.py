@@ -22,10 +22,11 @@ def login():
                                 url_for('main.log_visit',
                                         username=user.username))
             else:
+                user.in_lab = True
+                db.session.commit()
                 return redirect(request.args.get('next') or
                                 url_for('main.user',
                                         username=user.username))
-        # TODO FLASH MESSAGE FOR NO CLICK ON PAY BUTTON
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
@@ -77,7 +78,7 @@ def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
-        flash('You have confirmed your account. Thanks!')
+        flash('You have confirmed your account. Login again to start making!')
     else:
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('main.index'))

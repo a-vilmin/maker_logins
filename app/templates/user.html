@@ -18,7 +18,16 @@
 	       <br><br>
 	       <h1>Hope {{ user.visits[-1].purpose }} went great!</h1>
 	    {% else %}
-	    <h1> Stub for reminding me to put active open hours people </h1>
+	    	{% for staff in all_users %}
+		  <div class="col-sm-4">			
+		  <div class="thumbnail">
+			<img src="{{ url_for('static', filename='img/' + staff.username + 									'.jpg') }}"/>
+			<div class="caption">
+				<p>Hello</p>
+			</div>		  	
+			</div>
+		  </div>
+		{% endfor %}
 	    {% endif %}
 	</div>
     </div>
