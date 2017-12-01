@@ -30,12 +30,10 @@
     <div class="row">
 	<div class="col-lg-4">
 	    <img src="{{ url_for('static', filename='img/logo.png') }}"/>
+	    <a href="{{ url_for('main.index') }}"
+	       class="btn btn-success btn-lg">Login Page</a>
 	    <a href="{{ url_for('auth.logout') }}"
-	       class="btn btn-success btn-lg pull-right">
-		{% if user.in_lab %}Logout
-
-		{% else %}Start Working{% endif %}
-	    </a>
+	       class="btn btn-success btn-lg pull-right">Logout</a>
 	</div>
 	<div class="col-lg-6">
 	    <table class="table table-striped">
@@ -57,6 +55,10 @@
 		    {% endfor %}
 		</tbody>
 	    </table>
+	    {% if all_users.count() %}
+	    <a href="{{ url_for('main.admin_logout_all') }}"
+	       class="btn btn-danger btn-lg pull-right">Logout All Users</a>
+	    {% endif %}
 	</div>
     </div>
 </div>

@@ -50,7 +50,7 @@ def log_visit(username):
     return render_template('log_visit.html', user=user, all_users=all_users)
 
 
-@main.route('/user/<username>/admin_logout', methods=['GET', 'POST'])
+@main.route('/user/<username>/admin_logout', methods=['GET'])
 @login_required
 def admin_logout(username):
     user = current_user._get_current_object()
@@ -62,4 +62,20 @@ def admin_logout(username):
     loggin_out.out_time = datetime.now()
     all_users = User.query.filter(db.and_(User.in_lab == 1,
                                           User.user_type != 'staff'))
+    return render_template('user.html', user=user, all_users=all_users)
+
+
+@main.route('/user/admin_logout_all', methods=['GET'])
+@login_required
+def admin_logout_all():
+    user = current_user._get_current_object()
+    if user.user_type != 'staff':
+        abort(500)
+
+    all_users = User.query.filter(db.and_(User.in_lab == 1,
+                                          User.user_type != 'staff'))
+    for each in all_users:
+        each.in_lab = False
+        each.out_time = datetime.now()
+
     return render_template('user.html', user=user, all_users=all_users)
