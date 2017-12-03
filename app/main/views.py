@@ -1,7 +1,7 @@
 from flask import current_app, render_template, redirect, \
     url_for, request, abort
 from flask_login import current_user, login_required
-from datetime import datetime
+from datetime import datetime, timedelta
 from . import main
 from .forms import VisitForm
 from ..models import Visit, User
@@ -22,14 +22,23 @@ def index():
 def user(username):
     user = current_user._get_current_object()
     if user.user_type != 'staff':
-    	all_users = User.query.filter(db.and_(User.in_lab == 1,
-        	                              User.user_type == 'staff'))
+        all_users = User.query.filter(db.and_(User.in_lab == 1,
+                                              User.user_type == 'staff'))
     else:
         all_users = User.query.filter(db.and_(User.in_lab == 1,
-         	                              User.user_type != 'staff'))
+                                              User.user_type != 'staff'))
+
+    duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
+                   timedelta())
+
+    days, seconds = duration.days, duration.seconds
+    hours = days * 24 + seconds // 3600
+    minutes = (seconds % 3600) // 60
+
     if user.username != username:
         abort(500)
-    return render_template('user.html', user=user, all_users=all_users)
+    return render_template('user.html', user=user, all_users=all_users,
+                           hours=hours, minutes=minutes)
 
 
 @main.route('/log_visit/<username>', methods=['GET', 'POST'])
