@@ -17,13 +17,14 @@
 	    {% if user.in_lab %}
 	       <br><br>
 	       <h1>Hope {{ user.visits[-1].purpose }} went great!</h1>
-	    {% else %}
+	       {% else %}
+	       <h1>Need Help? This staff is available for you!</h1>
 	    	{% for staff in all_users %}
 		  <div class="col-sm-4">			
 		  <div class="thumbnail">
 			<img src="{{ url_for('static', filename='img/' + staff.username + 									'.jpg') }}"/>
 			<div class="caption">
-				<p>Hello</p>
+				<p>{{staff.username}}</p>
 			</div>		  	
 			</div>
 		  </div>
