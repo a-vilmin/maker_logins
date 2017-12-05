@@ -73,7 +73,10 @@ def admin_logout(username):
 
     loggin_out = User.query.filter_by(username=username).first()
     loggin_out.in_lab = False
-    loggin_out.out_time = datetime.now()
+
+    last_visit = loggin_out.visits[-1]
+    last_visit.out_time = datetime.now()
+    db.session.commit()
     all_users = User.query.filter(db.and_(User.in_lab == 1,
                                           User.user_type != 'staff'))
     return render_template('user.html', user=user, all_users=all_users)
@@ -90,6 +93,10 @@ def admin_logout_all():
                                           User.user_type != 'staff'))
     for each in all_users:
         each.in_lab = False
-        each.out_time = datetime.now()
+
+        last = each.visits[-1]
+        last.out_time = datetime.now()
+
+        db.session.commit()
 
     return render_template('user.html', user=user, all_users=all_users)
