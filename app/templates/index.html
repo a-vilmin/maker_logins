@@ -37,7 +37,9 @@
 		{% for user in users %}
 		<tr>
 		    <td>{{ user.username }}</td>
+		{% if user.visits|length %}
 		    <td>{{ user.visits[-1].purpose }}</td>
+		{% endif %}
 		</tr>
 		{% endfor %}
 	    </tbody>

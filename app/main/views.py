@@ -27,13 +27,16 @@ def user(username):
     else:
         all_users = User.query.filter(db.and_(User.in_lab == 1,
                                               User.user_type != 'staff'))
+    try:
+    	duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
+        	           timedelta())
 
-    duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
-                   timedelta())
-
-    days, seconds = duration.days, duration.seconds
-    hours = days * 24 + seconds // 3600
-    minutes = (seconds % 3600) // 60
+    	days, seconds = duration.days, duration.seconds
+    	hours = days * 24 + seconds // 3600
+    	minutes = (seconds % 3600) // 60
+    except:
+        hours = 0
+        minutes = 0
 
     if user.username != username:
         abort(500)
@@ -74,8 +77,12 @@ def admin_logout(username):
     loggin_out = User.query.filter_by(username=username).first()
     loggin_out.in_lab = False
 
-    last_visit = loggin_out.visits[-1]
-    last_visit.out_time = datetime.now()
+    try:
+    	last_visit = loggin_out.visits[-1]
+    	last_visit.out_time = datetime.now()
+    except:
+        pass
+
     db.session.commit()
     all_users = User.query.filter(db.and_(User.in_lab == 1,
                                           User.user_type != 'staff'))
@@ -93,10 +100,11 @@ def admin_logout_all():
                                           User.user_type != 'staff'))
     for each in all_users:
         each.in_lab = False
-
-        last = each.visits[-1]
-        last.out_time = datetime.now()
-
+        try:
+            last = each.visits[-1]
+            last.out_time = datetime.now()
+        except:
+            pass
         db.session.commit()
 
     return render_template('user.html', user=user, all_users=all_users)

@@ -47,9 +47,13 @@ def logout():
     else:
         user.in_lab = False
         # put leave time in to current visit
-        visit = Visit.query.filter_by(visit_user=user.id)[-1]
-        visit.out_time = datetime.now()
-        db.session.commit()
+        try:
+            visit = Visit.query.filter_by(visit_user=user.id)[-1]
+            visit.out_time = datetime.now()
+            db.session.commit()
+        except IndexError:
+            # either staff or somehow didnt log a visit
+            pass
     logout_user()
     return redirect(url_for('main.index'))
 
