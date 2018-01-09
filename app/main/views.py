@@ -28,12 +28,13 @@ def user(username):
         all_users = User.query.filter(db.and_(User.in_lab == 1,
                                               User.user_type != 'staff'))
     try:
-    	duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
-        	           timedelta())
+        duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
+                           timedelta())
 
-    	days, seconds = duration.days, duration.seconds
-    	hours = days * 24 + seconds // 3600
-    	minutes = (seconds % 3600) // 60
+        duration += datetime.now() - user.visits[-1].in_time
+        days, seconds = duration.days, duration.seconds
+        hours = days * 24 + seconds // 3600
+        minutes = (seconds % 3600) // 60
     except:
         hours = 0
         minutes = 0
@@ -78,8 +79,8 @@ def admin_logout(username):
     loggin_out.in_lab = False
 
     try:
-    	last_visit = loggin_out.visits[-1]
-    	last_visit.out_time = datetime.now()
+        last_visit = loggin_out.visits[-1]
+        last_visit.out_time = datetime.now()
     except:
         pass
 
