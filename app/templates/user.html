@@ -50,7 +50,9 @@
 	    <a href="{{ url_for('main.index') }}"
 	       class="btn btn-success btn-lg">Login Page</a>
 	    <a href="{{ url_for('auth.logout') }}"
-	       class="btn btn-success btn-lg pull-right">Logout</a>
+	       class="btn btn-success btn-lg">Logout</a>
+	    <a href="{{ url_for('main.admin_search') }}"
+	       class="btn btn-danger btn-lg">Add Admin</a>
 	</div>
 	<div class="col-lg-6">
 	    <table class="table table-striped">
@@ -75,7 +77,7 @@
 	    {% if all_users.count() %}
 	    <a href="{{ url_for('main.admin_logout_all') }}"
 	       class="btn btn-danger btn-lg pull-right">Logout All Users</a>
-	    {% endif %}
+	    {% endif %}    
 	</div>
     </div>
 </div>

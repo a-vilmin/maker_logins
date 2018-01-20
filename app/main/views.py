@@ -1,9 +1,11 @@
 from flask import current_app, render_template, redirect, \
-    url_for, request, abort
+    url_for, request, abort, flash
 from flask_login import current_user, login_required
 from datetime import datetime, timedelta
+from werkzeug import secure_filename
+import os
 from . import main
-from .forms import VisitForm
+from .forms import VisitForm, AdminSearchForm, AdminChangeForm
 from ..models import Visit, User
 from .. import db
 
@@ -29,7 +31,7 @@ def user(username):
                                               User.user_type != 'staff'))
     try:
         duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
-                           timedelta())
+                       timedelta())
 
         duration += datetime.now() - user.visits[-1].in_time
         days, seconds = duration.days, duration.seconds
@@ -50,9 +52,8 @@ def user(username):
 def log_visit(username):
     form = VisitForm()
     user = current_user._get_current_object()
-    all_users = all_users = User.query.filter(db.and_(User.in_lab == 1,
-                                                      User.user_type ==
-                                                      'staff'))
+    all_users = User.query.filter(db.and_(User.in_lab == 1,
+                                          User.user_type == 'staff'))
     if user.username != username:
         abort(500)
     if form.validate_on_submit():
@@ -64,8 +65,8 @@ def log_visit(username):
         db.session.add(visit)
         db.session.commit()
         return redirect(url_for('main.user', username=username))
-    return render_template('log_visit.html', user=user, all_users=all_users, 
-                            form=form)
+    return render_template('log_visit.html', user=user, all_users=all_users,
+                           form=form)
 
 
 @main.route('/user/<username>/admin_logout', methods=['GET'])
@@ -108,4 +109,50 @@ def admin_logout_all():
             pass
         db.session.commit()
 
-    return render_template('user.html', user=user, all_users=all_users)
+    return render_template('user.html', user=user, all_users=None)
+
+
+@main.route('/user/admin_search', methods=['GET', 'POST'])
+@login_required
+def admin_search():
+    user = current_user._get_current_object()
+    if user.user_type != 'staff':
+        abort(500)
+
+    form = AdminSearchForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.name_search.data).first()
+        if not user:
+            flash("That username isn't found in the database")
+            return redirect(url_for('main.admin_search'))
+        else:
+            return redirect(url_for('main.admin_add', username=user.username))
+    return render_template('admin_search.html', form=form)
+
+
+@main.route('/user/admin_add/<username>', methods=['GET', 'POST'])
+@login_required
+def admin_add(username):
+    user = current_user._get_current_object()
+    if user.user_type != 'staff':
+        abort(500)
+
+    form = AdminChangeForm()
+    if form.validate_on_submit():
+        # add photos and shit
+        user = User.query.filter_by(username=username).first()
+        try:
+            user.user_type = 'staff'
+            user.first_name = form.first_name.data
+
+            f = form.photo.data
+            f.save('app/static/img/'+user.username+'.jpg')
+
+            db.session.commit()
+            all_users = User.query.filter(db.and_(User.in_lab == 1,
+                                                  User.user_type != 'staff'))
+            return render_template('user.html', user=user, all_users=all_users)
+        except:
+            flash("There was an error. Try again.")
+            return redirect(url_for('main.admin_add', username=user.username))
+    return render_template('admin_add.html', form=form, username=username)
