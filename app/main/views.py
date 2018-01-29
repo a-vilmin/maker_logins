@@ -109,7 +109,7 @@ def admin_logout_all():
             pass
         db.session.commit()
 
-    return render_template('user.html', user=user, all_users=None)
+    return render_template('user.html', user=user, all_users=[])
 
 
 @main.route('/user/admin_search', methods=['GET', 'POST'])
