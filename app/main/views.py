@@ -31,7 +31,7 @@ def user(username):
                                               User.user_type != 'staff'))
     try:
         duration = sum([(x.out_time - x.in_time) for x in user.visits[:-1]],
-                       timedelta())
+                         timedelta())
 
         duration += datetime.now() - user.visits[-1].in_time
         days, seconds = duration.days, duration.seconds
